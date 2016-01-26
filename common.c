@@ -6,6 +6,7 @@
 #include <stdarg.h>
 #include <errno.h>
 #include <string.h>
+#include <strings.h>
 #include <assert.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -26,6 +27,7 @@
 #include <sys/param.h>
 #include <pthread.h>
 #include <arpa/nameser.h>
+#include <ctype.h>
 
 #include "common.h"
 
@@ -139,7 +141,8 @@ int CreateClientSocket(char * server_address,int protocol, int server_port, stru
                 server_address, strerror(errno), errno, __FILE__, __LINE__);
         return -1;
     }
-    bzero(addr_struct, sizeof(addr_struct));
+    bzero(addr_struct, sizeof(struct sockaddr_in) ); //sizeof(addr_struct));
+    //bzero(addr_struct, sizeof(*addr_struct));
     addr_struct->sin_family = AF_INET;
     addr_struct->sin_port = htons(server_port);
     rcode=inet_pton(AF_INET, server_address, &(addr_struct->sin_addr));
