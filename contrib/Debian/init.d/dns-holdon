@@ -1,0 +1,63 @@
+#!/bin/sh
+#
+
+### BEGIN INIT INFO
+# Provides:        dns-holdon
+# Required-Start:  $network $remote_fs $syslog
+# Required-Stop:   $network $remote_fs $syslog
+# Default-Start:   2 3 4 5
+# Default-Stop:
+# Short-Description: Start dns-holdon daemon
+### END INIT INFO
+# $Id: dns-holdon 44 2012-04-08 04:37:10Z zhankaowen@gmail.com $
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+. /lib/lsb/init-functions
+
+BINDIR=/usr/local/bin
+DAEMON=dns-holdon
+CONF_FILE="/etc/default/dns-holdon"
+
+if [ -f $CONF_FILE ] ; then
+  . $CONF_FILE
+fi
+
+PIDFILE=${PIDFILE-/var/run/dns-holdon.pid}
+LOGFILE=${LOGFILE-/var/log/dns-holdon.log}
+
+test -x $BINDIR/$DAEMON || exit 0
+
+case "$1" in
+  start)
+    echo -n "Starting $DAEMON: "
+    start-stop-daemon --start --pidfile $PIDFILE \
+	 --exec $BINDIR/$DAEMON -- -d -i $PIDFILE -l $LOGFILE $OPTS
+    echo "ok."
+    ;;
+  stop)
+    echo -n "Stopping $DAEMON: "
+    start-stop-daemon --stop --pidfile $PIDFILE \
+			    --oknodo --retry 30 -x $BINDIR/$DAEMON
+    echo "ok."
+      ;;
+  restart)
+    echo -n "Restarting $DAEMON: "
+    start-stop-daemon --stop --pidfile $PIDFILE \
+			    --oknodo --retry 30 -x $BINDIR/$DAEMON
+    start-stop-daemon --start --pidfile $PIDFILE \
+	 --exec $BINDIR/$DAEMON -- -d -i $PIDFILE -l $LOGFILE $OPTS
+    echo "ok."
+    ;;
+  reload|force-reload)
+    echo "Reloading $DAEMON configuration files"
+    start-stop-daemon --stop --pidfile $PIDFILE \
+			    --signal 1 -x $BINDIR/$DAEMON
+    ;;
+  *)
+    echo "Usage: /etc/init.d/$DAEMON {start|stop|restart|reload}"
+    exit 1
+    ;;
+esac
+
+exit 0

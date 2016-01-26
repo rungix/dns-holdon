@@ -1,0 +1,97 @@
+#!/bin/sh
+#
+# DESCRIPTION
+#
+#   Startup init script for dns-holdon daemon on Redhat linux.
+#
+# Distributed with dns-holdon.
+#
+# chkconfig: - 95 35
+# description: Starts and stops the dns-holdon daemon
+#
+# $Id: dadder 43 2012-04-08 03:10:44Z anonymous@gmail.com $
+
+DADDER="/usr/local/dadder/dadder"
+CONF_FILE="/usr/local/dadder/dadder.config"
+
+if [ -f $CONF_FILE ] ; then
+  . $CONF_FILE
+fi
+
+pidfile=${PIDFILE-/var/run/dadder.pid}
+logfile=${LOGFILE-/var/log/dadder.log}
+
+# Source function library.
+if [ -f /etc/init.d/functions ] ; then
+  . /etc/init.d/functions
+elif [ -f /etc/rc.d/init.d/functions ] ; then
+  . /etc/rc.d/init.d/functions
+else
+  exit 0
+fi
+
+if [ ! -x $DADDER ] ; then
+  echo "'$DADDER' not found, pls check it."
+  exit 0
+fi
+
+RETVAL=0
+
+start() {
+    echo -n "Starting dns-holdon: "
+    daemon $DADDER -d -i $pidfile -l $logfile $OPTS
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && touch /var/lock/subsys/dadder || \
+       RETVAL=1
+    return $RETVAL
+}	
+
+stop() {
+    echo -n "Stopping dns-holdon: "
+    killproc $DADDER
+    RETVAL=$?
+    [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/dadder
+    echo ""
+    return $RETVAL
+}	
+
+restart() {
+    stop
+    start
+}	
+
+reload() {
+    echo -n "Reloading config file: "
+    killproc $DADDER -HUP
+    RETVAL=$?
+    echo
+    return $RETVAL
+}	
+
+rhstatus() {
+    status $DADDER
+}
+
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
+	;;
+  restart)
+  	restart
+	;;
+  reload)
+  	reload
+	;;
+  status)
+  	rhstatus
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|reload|status}"
+	exit 1
+esac
+
+exit $?

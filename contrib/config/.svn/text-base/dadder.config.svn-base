@@ -1,0 +1,30 @@
+; This is a test configuration file
+
+[main]
+file_blacklist=/usr/local/dadder/blacklist.txt
+file_badip  = /usr/local/dadder/badip.txt
+
+service_port = 5335
+tcpservice_port = 5335
+open_resolver = 8.8.8.8
+open_resolver_port = 53
+
+
+;Change the following IP address with your own local dns resolver: 
+local_resolver = 127.0.0.1 
+local_resolver_port = 5555
+
+ 
+daemonize = yes 
+
+file_log=/var/log/dadder.log
+file_pid=/var/run/dadder.pid
+
+[test]
+
+;This is a domain name which GFW will not like to block. 
+;You can replace with any other such names
+
+testname=www.mit.edu
+
+test_interval=60

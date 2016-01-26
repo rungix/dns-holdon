@@ -1,0 +1,85 @@
+This directory contains some scripts file for auto-starting dns-holdon
+on boot, config file for logrotate.
+
+Here are instrcutions for different OSs.  Please submit additions
+or improvements to this list!
+
+RedHat Linux:
+============
+
+On RedHat Linux, init script should be copied to /etc/init.d/dns-holdon:
+
+    cp RedHat/init.d/dns-holdon /etc/init.d/dns-holdon
+
+dns-holdon config file should be copied to /etc/sysconfig/dns-holdon:
+
+    cp config/dns-holdon /etc/sysconfig/dns-holdon
+
+After copying it, you can test it by running these commands as root:
+
+    /etc/init.d/dns-holdon start
+    /etc/init.d/dns-holdon status
+    /etc/init.d/dns-holdon stop
+
+You should then run the following commands as root:
+
+    chkconfig --add dns-holdon
+    chkconfig --level 345 dns-holdon on
+    chkconfig --list dns-holdon
+
+This will auto-start dns-holdon at run levels 3, 4 and 5.
+
+Finally, you should copy logrotate file to /etc/logrotate.d directory:
+
+    cp logrotate.d/dns-holdon /etc/logrotate.d/dns-holdon
+
+Debian Linux:
+============
+
+Copy the debian startup script:
+
+    cp Debian/init.d/dns-holdon /etc/init.d/dns-holdon
+
+dns-holdon config file should be copied to /etc/default/dns-holdon:
+
+    cp config/dns-holdon /etc/default/dns-holdon
+
+Run the following command to install in rc.d:
+
+    update-rc.d dns-holdon defaults
+
+Set the correct init.d rights:
+
+    chmod 755 /etc/init.d/dns-holdon
+
+Usage: /etc/init.d/dns-holdon {start|stop|restart|reload}
+
+Finally, you should copy logrotate file to /etc/logrotate.d directory:
+
+    cp logrotate.d/dns-holdon /etc/logrotate.d/dns-holdon
+
+Gentoo Linux:
+=============
+
+Copy the Gentoo startup script:
+
+    cp Gentoo/init.d/dns-holdon /etc/init.d/dns-holdon
+
+dns-holdon config file should be copied to /etc/conf.d/dns-holdon:
+
+    cp config/dns-holdon /etc/conf.d/dns-holdon
+
+Run the following command to startup dns-holdon with system:
+
+    rc-update add dns-holdon default
+
+Set the correct init.d rights:
+
+    chmod 755 /etc/init.d/dns-holdon
+
+Usage: /etc/init.d/dns-holdon {start|stop|restart|reload}
+
+Finally, you should copy logrotate file to /etc/logrotate.d directory:
+
+    cp logrotate.d/dns-holdon /etc/logrotate.d/dns-holdon
+

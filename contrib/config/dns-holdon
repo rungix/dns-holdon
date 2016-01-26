@@ -1,0 +1,17 @@
+# other options for start dns-holdon daemon
+# default: none
+#
+# -o : Listen to 0.0.0.0
+# -p 53: Listen to port 53
+# -L <IPADDR:PORT> : Forward .cn .CN domain to IPADDR:PORT
+
+#OPTS="-o -p 53 -L 202.96.64.68"
+OPTS="-o -p 53"
+
+# Default PID file for dns-holdon
+# Also change logrotate config file to the same
+PIDFILE=/var/run/dns-holdon.pid
+
+# Default LOG file for dns-holdon
+# Also change logrotate config file to the same
+LOGFILE=/var/log/dns-holdon.log

@@ -1,0 +1,57 @@
+#!/sbin/runscript
+#
+# DESCRIPTION
+# Startup init script for dns-holdon on Gentoo linux.
+# $Id: dns-holdon 45 2012-04-08 13:35:20Z zhankaowen@gmail.com $
+
+BINDIR=/usr/local/bin
+DAEMON=dns-holdon
+CONF_FILE="/etc/conf.d/dns-holdon"
+
+if [ -f $CONF_FILE ] ; then
+  source $CONF_FILE
+fi
+
+PIDFILE=${PIDFILE-/var/run/dns-holdon.pid}
+LOGFILE=${LOGFILE-/var/log/dns-holdon.log}
+
+depend() {
+    use logger
+    need net
+}
+
+start() {
+    ebegin "Starting $DAEMON"
+    start-stop-daemon --start --pidfile $PIDFILE \
+	 --exec $BINDIR/$DAEMON -- -d -i $PIDFILE -l $LOGFILE $OPTS
+    eend $?
+}
+
+stop() {
+    ebegin "Stopping $DAEMON"
+    start-stop-daemon --stop --pidfile $PIDFILE --name $DAEMON
+    eend $?
+}
+
+restart() {
+    ebegin "Restarting $DAEMON"
+    svc_stop
+    sleep 1
+    svc_start
+    eend $? "Failed to restart $DAEMON"
+}
+
+reload() {
+    ebegin "Refreshing $DAEMON configuration"
+    kill -HUP `cat ${PIDFILE}` &>/dev/null
+    eend $? "Failed to reload $DAEMON"
+}
+
+status() {
+    PIDS=`pidof $DAEMON`
+    if [ -z "$PIDS" ] ; then
+       ewarn "$DAEMON is stopping."
+    else
+       ewarn "$DAEMON is running with pid $PIDS."
+    fi
+}

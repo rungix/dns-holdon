@@ -1,0 +1,97 @@
+#!/bin/sh
+#
+# DESCRIPTION
+#
+#   Startup init script for dns-holdon daemon on Redhat linux.
+#
+# Distributed with dns-holdon.
+#
+# chkconfig: - 95 35
+# description: Starts and stops the dns-holdon daemon
+#
+# $Id: dns-holdon 43 2012-04-08 03:10:44Z zhankaowen@gmail.com $
+
+DNS_HOLDON="/usr/local/bin/dns-holdon"
+CONF_FILE="/etc/sysconfig/dns-holdon"
+
+if [ -f $CONF_FILE ] ; then
+  . $CONF_FILE
+fi
+
+pidfile=${PIDFILE-/var/run/dns-holdon.pid}
+logfile=${LOGFILE-/var/log/dns-holdon.log}
+
+# Source function library.
+if [ -f /etc/init.d/functions ] ; then
+  . /etc/init.d/functions
+elif [ -f /etc/rc.d/init.d/functions ] ; then
+  . /etc/rc.d/init.d/functions
+else
+  exit 0
+fi
+
+if [ ! -x $DNS_HOLDON ] ; then
+  echo "'$DNS_HOLDON' not found, pls check it."
+  exit 0
+fi
+
+RETVAL=0
+
+start() {
+    echo -n "Starting dns-holdon: "
+    daemon $DNS_HOLDON -d -i $pidfile -l $logfile $OPTS
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && touch /var/lock/subsys/dns-holdon || \
+       RETVAL=1
+    return $RETVAL
+}	
+
+stop() {
+    echo -n "Stopping dns-holdon: "
+    killproc $DNS_HOLDON
+    RETVAL=$?
+    [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/dns-holdon
+    echo ""
+    return $RETVAL
+}	
+
+restart() {
+    stop
+    start
+}	
+
+reload() {
+    echo -n "Reloading config file: "
+    killproc $DNS_HOLDON -HUP
+    RETVAL=$?
+    echo
+    return $RETVAL
+}	
+
+rhstatus() {
+    status $DNS_HOLDON
+}
+
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+  	stop
+	;;
+  restart)
+  	restart
+	;;
+  reload)
+  	reload
+	;;
+  status)
+  	rhstatus
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|reload|status}"
+	exit 1
+esac
+
+exit $?
