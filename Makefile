@@ -1,8 +1,7 @@
 ## Makefile for dadder ##
 
-CFLAGS=-c -Wall -g -O0 -DDEBUG
+CFLAGS=-c -Wall -O0 -DDEBUG
 
-CC=gcc
 LDFLAGS=-lresolv -lpthread
 SOURCES=main.c blacklist.c config.c hashtbl.c ini.c  common.c badip.c forwarder.c query_record.c
 OBJECTS=$(SOURCES:.c=.o)

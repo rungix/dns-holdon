@@ -7,12 +7,15 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
+#ifndef NS_MAXMSG
+#define NS_MAXMSG 65535
+#endif
 
-#define LEN_NAME 64 
+#define LEN_NAME 64
 
 /*
 typedef enum _boolean{
-    =0, 
+    =0,
     = 1
 } BOOL;
 
@@ -31,7 +34,7 @@ typedef enum _country_code{
     cc_de = 3,
     cc_other =255
 } CountryCode;
-     
+
 typedef struct _resolver{
     char name[LEN_NAME];
     in_addr_t ipaddr;
@@ -44,9 +47,9 @@ typedef struct _resolver{
     BOOL dnssec_ok;
     BOOL forwarder;
     unsigned long time_lasttest;
-    BOOL open; 
+    BOOL open;
     DNSSoftware software;
-    char version[LEN_NAME]; 
+    char version[LEN_NAME];
     int censored;
     char * key;
     char * algorithm;
@@ -58,6 +61,6 @@ typedef struct _resolver{
 
 
 DNSResolver * resolver_new(char * name, char *ip, int port);
-int resolver_test(DNSResolver *resolver, char *testname, char *rrtype); 
+int resolver_test(DNSResolver *resolver, char *testname, char *rrtype);
 
-#endif 
+#endif
