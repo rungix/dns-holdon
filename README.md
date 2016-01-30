@@ -2,9 +2,7 @@
 
 A DNS forwarder which implement the following paper: 
 
-**Hold-On: Protecting Against On-Path DNS Poisoning, Securing and Trusting Internet Names, SATIN 2012**
-
-**https://www1.icsi.berkeley.edu/~nweaver/papers/2012-satin-holdon.pdf**
+**[Hold-On: Protecting Against On-Path DNS Poisoning, Securing and Trusting Internet Names, SATIN 2012](https://www1.icsi.berkeley.edu/~nweaver/papers/2012-satin-holdon.pdf)**
 
 **Dadder**(DNS-Holdon) operates as a stub resolver to a known-uncensored remote recursive resolver. As several attacks on DNS inject forged DNS replies without suppressing the legitimate replies. Current implementations of DNS resolvers are vulnerable to accepting the injected replies if the attacker’s reply arrives before the legitimate one. In the case of regular DNS, this behavior allows an attacker to corrupt a victim’s interpretation of a name.
 
